@@ -25,12 +25,30 @@
  *   (or does this belong in a plugin of its own?)
  */
 
-var $ = require('jquery')
+$ = $ || require('jquery')
 var S = require('string')
 jQuery = $ // needed for Bootstrap
 require('bootstrap')
 
 var collapse = {}
+
+collapse.unique = function (fn) {
+  var results = []
+  return function (arg) {
+    var result = fn(arg)
+    if (results.indexOf(result.valueOf()) >= 0) {
+      var i = 1
+      var newresult = ''
+      do {
+        i++
+        newresult = result + '-' + i
+      } while (results.indexOf(newresult.valueOf()) >= 0)
+      result = newresult
+    }
+    results.push(result.valueOf())
+    return result
+  }
+}
 
 collapse.generateId = function (el, prefix) {
   prefix = prefix || ''
