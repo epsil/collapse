@@ -1,0 +1,11 @@
+{
+  "name": "collapse",
+  "version": "1.0.0",
+  "description": "Collapsible HTML elements",
+  "main": "collapse.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Vegard Øye <vegard_oye@hotmail.com>",
+  "license": "MIT"
+}
