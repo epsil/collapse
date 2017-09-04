@@ -51,3 +51,28 @@ h1:hover .collapse-button, h2:hover .collapse-button, h3:hover .collapse-button,
     content: "\F077"; /* chevron-up */
     font-family: FontAwesome;
 }
+
+ul .collapse-button:before {
+    content: "\F106"; /* angle-up */
+    font-family: FontAwesome;
+}
+
+ul .collapse-button[aria-expanded="true"]:before {
+    content: "\F105"; /* angle-right */
+    font-family: FontAwesome;
+}
+
+ul.collapse, ul.collapse ul {
+    list-style-type: none !important;
+}
+
+ul.collapse li {
+    position: relative;
+}
+
+ul.collapse .collapse-button {
+    left: -1.5em;
+    position: absolute;
+    width: 1em;
+    text-align: right;
+}

@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-/* global jQuery:true */
-/* exported jQuery */
+/* global $:true, jQuery:true */
+/* exported $, jQuery */
 
 /**
  * Collapsible headers, based on Bootstrap's collapse plugin.
@@ -57,6 +57,30 @@ collapse.generateId = function (el, prefix) {
 
 collapse.generateUniqueId = collapse.unique(collapse.generateId)
 
+collapse.addCollapsibleLists = function (options) {
+  return this.each(function () {
+    var body = $(this)
+    body.find('ul > li').each(function (i, el) {
+      var li = $(this)
+      var ul = li.find('> ul')
+      if (ul.length > 0) {
+        li.attr('id', collapse.generateUniqueId(ul.prevAll()))
+        collapse.addButton(li, ul, true)
+      } else {
+        var id = collapse.generateUniqueId(li)
+        var button = collapse.button(id)
+        button.removeAttr('aria-controls href')
+        li.attr('id', id)
+        li.prepend(button)
+      }
+      var list = li.parent()
+      if (!list.hasClass('collapse')) {
+        list.addClass('collapse in')
+      }
+    })
+  })
+}
+
 collapse.addCollapsibleSections = function (options) {
   var opts = $.extend({}, collapse.defaults, options)
   return this.each(function () {
@@ -99,11 +123,15 @@ collapse.addSection = function (header) {
 }
 
 // add button to header
-collapse.addButton = function (header, section) {
+collapse.addButton = function (header, section, prepend) {
   // add button
   var id = collapse.sectionId(header, section)
   var button = collapse.button(id)
-  header.append(button)
+  if (prepend) {
+    header.prepend(button)
+  } else {
+    header.append(button)
+  }
 
   // add Bootstrap classes
   section.addClass('collapse in')
@@ -151,6 +179,7 @@ collapse.defaults = {
 }
 
 $.fn.addCollapsibleSections = collapse.addCollapsibleSections
+$.fn.addCollapsibleLists = collapse.addCollapsibleLists
 $.fn.addCollapsibleSections.addSection = collapse.addSection
 $.fn.addCollapsibleSections.addButton = collapse.addButton
 $.fn.addCollapsibleSections.button = collapse.button
