@@ -1,31 +1,42 @@
 /* global jQuery:true */
 /* exported jQuery */
 
-// Collapsible headers, based on Bootstrap's collapse plugin
-//
-// TODO:
-//
-// - Require bootstrap as a dependency: require('bootstrap').
-// - Divide code into HTML pass and JavaScript pass:
-//   HTML pass should add Bootstrap attributes to headers,
-//   JavaScript pass should add click handlers.
-//   (perhaps JS could be replaced with CSS' :before/:after?).
-// - Should the JavaScript pass be performed automatically?
-//   I.e., $(function () { ... }). Or will this cause problems
-//   if the code is used as a Node plugin?
-// - Does the code style of Bootstrap's plugin provide any clues
-//   with regard to best practice?
-// - Add code for collapsible lists.
-// - Make links to collapsed elements auto-expand them
-// - Option like Pandoc's --section-divs
-//   (or does this belong in a plugin of its own?)
+/**
+ * Collapsible headers, based on Bootstrap's collapse plugin.
+ *
+ * Invoke with: $('body').addCollapsibleSections()
+ *
+ * TODO:
+ *
+ * - Require bootstrap as a dependency: require('bootstrap').
+ * - Divide code into HTML pass and JavaScript pass:
+ *   HTML pass should add Bootstrap attributes to headers,
+ *   JavaScript pass should add click handlers.
+ *   (perhaps JS could be replaced with CSS' :before/:after?).
+ * - Should the JavaScript pass be performed automatically?
+ *   I.e., $(function () { ... }). Or will this cause problems
+ *   if the code is used as a Node plugin?
+ * - Does the code style of Bootstrap's plugin provide any clues
+ *   with regard to best practice?
+ * - Add code for collapsible lists.
+ * - Make links to collapsed elements auto-expand them
+ * - Option like Pandoc's --section-divs
+ *   (or does this belong in a plugin of its own?)
+ */
 
 var $ = require('jquery')
-var util = require('./util')
+var S = require('string')
 jQuery = $ // needed for Bootstrap
 require('bootstrap')
 
 var collapse = {}
+
+collapse.generateId = function (el, prefix) {
+  prefix = prefix || ''
+  return prefix + S(el.text().trim()).slugify()
+}
+
+collapse.generateUniqueId = collapse.unique(collapse.generateId)
 
 collapse.addCollapsibleSections = function (options) {
   var opts = $.extend({}, collapse.defaults, options)
@@ -98,7 +109,7 @@ collapse.button = function (id) {
 collapse.headerId = function (header) {
   var id = header.attr('id')
   if (id === undefined || id === '') {
-    id = util.generateUniqueId(header)
+    id = collapse.generateUniqueId(header)
     header.attr('id', id)
   }
   return id
