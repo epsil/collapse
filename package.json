@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "Collapsible HTML elements",
   "main": "collapse.js",
-  "scripts": {
-    "build": "browserify lib/collapse.js -o dist/collapse.js && cp -f lib/collapse.css dist/collapse.css"
-  },
   "author": "Vegard Øye <vegard_oye@hotmail.com>",
   "license": "MIT",
   "dependencies": {
@@ -14,6 +11,12 @@
     "string": "^3.3.3"
   },
   "devDependencies": {
-    "browserify": "^14.4.0"
+    "browserify": "^14.4.0",
+    "jshint": "^2.9.5",
+    "standard": "^10.0.3"
+  },
+  "scripts": {
+    "build": "browserify lib/collapse.js -o dist/collapse.js && cp -f lib/collapse.css dist/collapse.css",
+    "lint": "jshint lib/collapse.js && standard lib/collapse.js"
   }
 }
