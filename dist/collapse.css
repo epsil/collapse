@@ -70,9 +70,26 @@ ul.collapse li {
     position: relative;
 }
 
+ul.collapse li:before {
+    content: normal;
+}
+
 ul.collapse .collapse-button {
+    border: none;
+    color: #999999 !important;
+    height: auto;
     left: -1.5em;
+    padding-bottom: 0;
+    padding-right: 0.5em;
     position: absolute;
-    width: 1em;
     text-align: right;
+    width: 1em;
+}
+
+.collapse + .collapse-ellipsis:after {
+    content: "\2026";
+}
+
+.collapse.in + .collapse-ellipsis:after {
+    content: normal;
 }

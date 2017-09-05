@@ -85,3 +85,11 @@ ul.collapse .collapse-button {
     text-align: right;
     width: 1em;
 }
+
+.collapse + .collapse-ellipsis:after {
+    content: "\2026";
+}
+
+.collapse.in + .collapse-ellipsis:after {
+    content: normal;
+}

@@ -62,16 +62,20 @@ collapse.addCollapsibleLists = function (options) {
     var body = $(this)
     body.find('ul > li').each(function (i, el) {
       var li = $(this)
-      var ul = li.find('> ul')
+      var ul = li.find('> ol, > ul').first()
       if (ul.length > 0) {
-        li.attr('id', collapse.generateUniqueId(ul.prevAll()))
-        collapse.addButton(li, ul, true)
+        var prev = li.clone()
+        prev.find('ol, ul').remove()
+        var listId = collapse.generateUniqueId(prev)
+        li.attr('id', listId + '-item')
+        collapse.addButton(li, ul, true, listId + '-list')
+        li.append('<a aria-hidden="true" class="collapse-ellipsis"></a>')
       } else {
         var id = collapse.generateUniqueId(li)
-        var button = collapse.button(id)
-        button.removeAttr('aria-controls href')
-        li.attr('id', id)
-        li.prepend(button)
+        li.attr('id', id + '-item')
+        var span = li.wrapInner('<span>').children().first()
+        collapse.addButton(li, span, true)
+        li.append('<a aria-hidden="true" class="collapse-ellipsis"></a>')
       }
       var list = li.parent()
       if (!list.hasClass('collapse')) {
@@ -123,9 +127,14 @@ collapse.addSection = function (header) {
 }
 
 // add button to header
-collapse.addButton = function (header, section, prepend) {
+collapse.addButton = function (header, section, prepend, sectionId) {
   // add button
-  var id = collapse.sectionId(header, section)
+  var id = sectionId
+  if (id) {
+    section.attr('id', id)
+  } else {
+    id = collapse.sectionId(header, section)
+  }
   var button = collapse.button(id)
   if (prepend) {
     header.prepend(button)
