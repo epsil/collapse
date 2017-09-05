@@ -86,6 +86,12 @@ ul.collapse .collapse-button {
     width: 1em;
 }
 
+.collapse-ellipsis, .collapse-ellipsis:hover {
+    border: none;
+    color: #999999 !important;
+    font-weight: bold;
+}
+
 .collapse + .collapse-ellipsis:after {
     content: "\2026";
 }
