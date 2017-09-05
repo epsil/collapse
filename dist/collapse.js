@@ -58,6 +58,21 @@ collapse.generateId = function (el, prefix) {
 
 collapse.generateUniqueId = collapse.unique(collapse.generateId)
 
+collapse.addClickHandlers = function (options) {
+  return this.each(function () {
+    var body = $(this)
+    body.find('.collapse-button').click(function () {
+      var button = $(this)
+      var id = button.attr('aria-controls')
+      var url = window.location.href + '#' + id
+      var expanded = (button.attr('aria-expanded') === 'true') ? 'false' : 'true'
+      if (typeof Storage !== 'undefined') {
+        window.localStorage.setItem(url, expanded)
+      }
+    })
+  })
+}
+
 collapse.addCollapsibleLists = function (options) {
   return this.each(function () {
     var body = $(this)
@@ -67,13 +82,19 @@ collapse.addCollapsibleLists = function (options) {
       if (ul.length > 0) {
         var prev = li.clone()
         prev.find('ol, ul').remove()
-        var listId = collapse.generateUniqueId(prev)
-        li.attr('id', listId + '-item')
+        var listId = li.attr('id')
+        if (!listId) {
+          listId = collapse.generateUniqueId(prev)
+          li.attr('id', listId + '-item')
+        }
         collapse.addButton(li, ul, true, listId + '-list')
         li.append('<a aria-hidden="true" class="collapse-ellipsis"></a>')
       } else {
-        var id = collapse.generateUniqueId(li)
-        li.attr('id', id + '-item')
+        var id = li.attr('id')
+        if (!id) {
+          id = collapse.generateUniqueId(li)
+          li.attr('id', id + '-item')
+        }
         var span = li.wrapInner('<span>').children().first()
         collapse.addButton(li, span, true)
         li.append('<a aria-hidden="true" class="collapse-ellipsis"></a>')
@@ -147,7 +168,10 @@ collapse.addButton = function (header, section, prepend, sectionId) {
   section.addClass('collapse in')
 
   // allow pre-collapsed sections
-  if (header.hasClass('collapse')) {
+  var url = window.location.href + '#' + id
+  if (header.hasClass('collapse') ||
+      ((typeof Storage !== 'undefined') &&
+       (window.localStorage.getItem(url) === 'false'))) {
     header.removeClass('collapse').addClass('collapsed')
   }
   if (header.hasClass('collapsed')) {
@@ -190,6 +214,7 @@ collapse.defaults = {
 
 $.fn.addCollapsibleSections = collapse.addCollapsibleSections
 $.fn.addCollapsibleLists = collapse.addCollapsibleLists
+$.fn.addClickHandlers = collapse.addClickHandlers
 $.fn.addCollapsibleSections.addSection = collapse.addSection
 $.fn.addCollapsibleSections.addButton = collapse.addButton
 $.fn.addCollapsibleSections.button = collapse.button
